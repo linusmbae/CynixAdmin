@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/icon"
+        android:title="Icon"
+        android:visible="true"
+        android:icon="@drawable/pofile"
+        app:showAsAction="ifRoom|withText"
+        />
+    <item
+        android:id="@+id/logoutCynix"
+        android:title="Logout"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/myMovies"
+        android:title="New Movie Icon"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/myProfile"
+        android:title="Profile"
+        android:visible="true"
+        app:showAsAction="never" />
+</menu>
