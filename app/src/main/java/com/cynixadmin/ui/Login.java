@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class Login extends AppCompatActivity implements NewUserDialog.CynixDialogListener {
+public class Login extends AppCompatActivity  {
     @BindView(R.id.newAcount)Button newAccount;
     @BindView(R.id.login)Button login;
     @BindView(R.id.forgotPass)Button forgotPass;
@@ -52,12 +52,6 @@ public class Login extends AppCompatActivity implements NewUserDialog.CynixDialo
         ButterKnife.bind(this);
         createAuthProgressDialog();
 
-        newAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addNewUser();
-            }
-        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,53 +142,9 @@ public class Login extends AppCompatActivity implements NewUserDialog.CynixDialo
         });
     }
 
-    private void addNewUser() {
-        NewUserDialog newUserDialog = new NewUserDialog();
-        newUserDialog.show(getSupportFragmentManager(), "new user dialog");
-    }
-
     private void openForgotPassCode() {
         Intent intent =new Intent(Login.this,ForgottenPassCode.class);
         startActivity(intent);
     }
 
-    @Override
-    public void applyText(String TxtUserName, String TxtEmail, String TxtPassword) {
-        if (TextUtils.isEmpty(TxtUserName)) {
-            new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Username Field is Empty")
-                    .show();
-        } else if (TextUtils.isEmpty(TxtEmail)) {
-            new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Email Field is Empty")
-                    .show();
-        } else if (TextUtils.isEmpty(TxtPassword)) {
-            new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Password Field is Empty")
-                    .show();
-        } else {
-            String mUserName = TxtUserName;
-            String email = TxtEmail;
-            String pass = TxtPassword;
-
-            new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText("Success")
-                    .show();
-
-            Users users;
-            users=new Users(email,pass,mUserName);
-
-
-            rootNode = FirebaseDatabase.getInstance();
-
-            reference = FirebaseDatabase
-                    .getInstance()
-                    .getReference(Constants.FIREBASE_CHILD_CYNIX_ADMIN);
-
-            DatabaseReference pushRef = reference.push();
-
-            pushRef.setValue(users);
-
-        }
-    }
 }

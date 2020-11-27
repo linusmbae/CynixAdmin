@@ -30,8 +30,10 @@ import android.widget.Toast;
 import com.cynixadmin.Adapter.MoviesIconAdapter;
 import com.cynixadmin.Constants.Constants;
 import com.cynixadmin.Dialogs.NewMovieIconDialog;
+import com.cynixadmin.Dialogs.NewUserDialog;
 import com.cynixadmin.R;
 import com.cynixadmin.models.MoviesImage;
+import com.cynixadmin.models.Users;
 import com.cynixadmin.services.RecyclerTouchListener;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,7 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class MainActivity extends AppCompatActivity implements NewMovieIconDialog.CynixDialogListener {
+public class MainActivity extends AppCompatActivity implements NewMovieIconDialog.CynixDialogListener, NewUserDialog.CynixDialogListener {
     private static final String TAG = "success";
     @BindView(R.id.recyclerViewMovies)RecyclerView mRecyclerView;
     @BindView(R.id.swipeRefreshIconLayout)SwipeRefreshLayout mRefresh;
@@ -236,7 +238,16 @@ public class MainActivity extends AppCompatActivity implements NewMovieIconDialo
             newMovie();
             return true;
         }
+        if (id == R.id.CreateNewUser) {
+            newUser();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void newUser() {
+        NewUserDialog newUserDialog = new NewUserDialog();
+        newUserDialog.show(getSupportFragmentManager(), "new user dialog");
     }
 
     private void newMovie() {
@@ -319,4 +330,48 @@ public class MainActivity extends AppCompatActivity implements NewMovieIconDialo
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
+    @Override
+    public void applyText(String TxtUserName, String TxtEmail, String TxtPassword) {
+        if (TextUtils.isEmpty(TxtUserName)) {
+            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Username Field is Empty")
+                    .show();
+        } else if (TextUtils.isEmpty(TxtEmail)) {
+            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Email Field is Empty")
+                    .show();
+        } else if (TextUtils.isEmpty(TxtPassword)) {
+            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Password Field is Empty")
+                    .show();
+        } else {
+            String mUserName = TxtUserName;
+            String email = TxtEmail;
+            String pass = TxtPassword;
+
+           try {
+               new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                       .setTitleText("Success")
+                       .show();
+
+               Users users;
+               users=new Users(email,pass,mUserName);
+
+
+               rootNode = FirebaseDatabase.getInstance();
+
+               reference = FirebaseDatabase
+                       .getInstance()
+                       .getReference(Constants.FIREBASE_CHILD_CYNIX_ADMIN);
+
+               DatabaseReference pushRef = reference.push();
+
+               pushRef.setValue(users);
+           }catch (NullPointerException ex){
+               Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+           }
+
+        }
+
+    }
 }

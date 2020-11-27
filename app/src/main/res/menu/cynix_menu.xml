@@ -11,6 +11,12 @@
         app:showAsAction="ifRoom|withText"
         />
     <item
+        android:id="@+id/CreateNewUser"
+        android:title="New User"
+        android:visible="true"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/logoutCynix"
         android:title="Logout"
         android:visible="true"
